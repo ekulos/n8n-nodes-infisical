@@ -69,22 +69,19 @@ export class InfisicalApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.host}}',
-			url: '/api/v1/auth/universal-auth/login',
-			method: 'POST',
+			url: '/api/v1/auth/token/validate',
+			method: 'GET',
 			headers: {
+				'Authorization': '=Bearer {{$credentials.token}}',
 				'Content-Type': 'application/json',
-			},
-			body: {
-				clientSecret: '={{$credentials.token}}',
 			},
 		},
 		rules: [
 			{
-				type: 'responseSuccessBody',
+				type: 'responseCode',
 				properties: {
-					message: 'Connection successful',
-					key: 'success',
-					value: true,
+					message: 'Authentication successful',
+					value: 200,
 				},
 			},
 		],
