@@ -1,0 +1,304 @@
+{
+  "examples": [
+    {
+      "title": "Direct Secret Retrieval with JSON (v1.0.3+)",
+      "description": "Retrieve a secret that contains JSON data and automatically parse it",
+      "infisical_secret": {
+        "name": "c4c_emea_qa_account",
+        "value": "{\"username\": \"C4C_CARONTE\", \"password\": \"Abstract2025!\"}"
+      },
+      "node_config": {
+        "serviceName": "c4c_emea_qa_account",
+        "secretPath": "/"
+      },
+      "expected_output": {
+        "username": "C4C_CARONTE",
+        "password": "Abstract2025!"
+      },
+      "n8n_workflow": {
+        "nodes": [
+          {
+            "name": "Start",
+            "type": "n8n-nodes-base.start",
+            "position": [250, 300]
+          },
+          {
+            "name": "Get C4C Credentials",
+            "type": "n8n-nodes-infisical.infisical",
+            "position": [450, 300],
+            "parameters": {
+              "serviceName": "c4c_emea_qa_account",
+              "secretPath": "/"
+            },
+            "credentials": {
+              "infisicalApi": {
+                "id": "1",
+                "name": "Infisical Production"
+              }
+            }
+          },
+          {
+            "name": "Use Credentials",
+            "type": "n8n-nodes-base.httpRequest",
+            "position": [650, 300],
+            "parameters": {
+              "url": "https://api.c4c.example.com/login",
+              "authentication": "genericCredentialType",
+              "genericAuthType": "httpBasicAuth",
+              "httpBasicAuth": {
+                "user": "={{$node['Get C4C Credentials'].json.username}}",
+                "password": "={{$node['Get C4C Credentials'].json.password}}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Simple Secret Retrieval",
+      "description": "Retrieve a simple string secret value",
+      "infisical_secret": {
+        "name": "my-super-super-secret",
+        "value": "twingolacoso"
+      },
+      "node_config": {
+        "serviceName": "my-super-super-secret",
+        "secretPath": "/"
+      },
+      "expected_output": {
+        "my-super-super-secret": "twingolacoso"
+      },
+      "n8n_workflow": {
+        "nodes": [
+          {
+            "name": "Start",
+            "type": "n8n-nodes-base.start",
+            "position": [250, 300]
+          },
+          {
+            "name": "Get API Key",
+            "type": "n8n-nodes-infisical.infisical",
+            "position": [450, 300],
+            "parameters": {
+              "serviceName": "my-super-super-secret",
+              "secretPath": "/"
+            }
+          },
+          {
+            "name": "Use API Key",
+            "type": "n8n-nodes-base.httpRequest",
+            "position": [650, 300],
+            "parameters": {
+              "url": "https://api.example.com/data",
+              "headers": {
+                "Authorization": "Bearer ={{$node['Get API Key'].json['my-super-super-secret']}}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Automatic Fallback Example",
+      "description": "Service name doesn't match exactly, but fallback finds the right secret",
+      "infisical_secret": {
+        "name": "DATABASE_CONFIG",
+        "value": "{\"host\": \"db.prod.com\", \"port\": 5432, \"ssl\": true, \"database\": \"myapp\"}"
+      },
+      "node_config": {
+        "serviceName": "database",
+        "secretPath": "/"
+      },
+      "fallback_process": [
+        "Try 'database' → Not found",
+        "Try 'DATABASE' → Not found", 
+        "Try 'database_config' → Not found",
+        "Try 'DATABASE_CONFIG' → Found!"
+      ],
+      "expected_output": {
+        "host": "db.prod.com",
+        "port": 5432,
+        "ssl": true,
+        "database": "myapp"
+      },
+      "n8n_workflow": {
+        "nodes": [
+          {
+            "name": "Start",
+            "type": "n8n-nodes-base.start",
+            "position": [250, 300]
+          },
+          {
+            "name": "Get DB Config",
+            "type": "n8n-nodes-infisical.infisical",
+            "position": [450, 300],
+            "parameters": {
+              "serviceName": "database",
+              "secretPath": "/"
+            }
+          },
+          {
+            "name": "Connect to Database",
+            "type": "n8n-nodes-base.postgres",
+            "position": [650, 300],
+            "parameters": {
+              "host": "={{$node['Get DB Config'].json.host}}",
+              "port": "={{$node['Get DB Config'].json.port}}",
+              "database": "={{$node['Get DB Config'].json.database}}",
+              "ssl": "={{$node['Get DB Config'].json.ssl}}",
+              "operation": "select",
+              "query": "SELECT COUNT(*) FROM users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "JSON Error Correction Example",
+      "description": "Automatic correction of malformed JSON in secret values",
+      "infisical_secret": {
+        "name": "api_config",
+        "value": "{username\": \"api_user\", \"token\": \"abc123\"}"
+      },
+      "correction_process": [
+        "Original: '{username\": \"api_user\", \"token\": \"abc123\"}'",
+        "Detected malformed JSON with missing quote",
+        "Auto-corrected: '{\"username\": \"api_user\", \"token\": \"abc123\"}'",
+        "Successfully parsed as JSON object"
+      ],
+      "node_config": {
+        "serviceName": "api_config",
+        "secretPath": "/"
+      },
+      "expected_output": {
+        "username": "api_user",
+        "token": "abc123"
+      }
+    },
+    {
+      "title": "Multi-Environment Configuration",
+      "description": "Using the same node configuration across different environments",
+      "environments": {
+        "dev": {
+          "secret_name": "app_config",
+          "value": "{\"api_url\": \"https://dev-api.example.com\", \"debug\": true}"
+        },
+        "prod": {
+          "secret_name": "app_config", 
+          "value": "{\"api_url\": \"https://api.example.com\", \"debug\": false}"
+        }
+      },
+      "node_config": {
+        "serviceName": "app_config",
+        "secretPath": "/"
+      },
+      "credential_config": {
+        "dev": {
+          "environment_slug": "dev"
+        },
+        "prod": {
+          "environment_slug": "prod"
+        }
+      }
+    },
+    {
+      "title": "Migration from v1.0.2 to v1.0.3",
+      "description": "How to migrate from old filtering approach to new direct retrieval",
+      "old_approach_v1_0_2": {
+        "infisical_secrets": [
+          {
+            "name": "DATABASE_USERNAME",
+            "value": "db_user"
+          },
+          {
+            "name": "DATABASE_PASSWORD", 
+            "value": "db_pass"
+          },
+          {
+            "name": "DATABASE_HOST",
+            "value": "db.example.com"
+          }
+        ],
+        "node_config": {
+          "serviceName": "database",
+          "secretPath": "/",
+          "credentialMapping": [
+            {"field": "username", "pattern": "DATABASE_USERNAME"},
+            {"field": "password", "pattern": "DATABASE_PASSWORD"},
+            {"field": "host", "pattern": "DATABASE_HOST"}
+          ]
+        },
+        "process": "Downloaded ALL secrets, then filtered by 'database' prefix"
+      },
+      "new_approach_v1_0_3": {
+        "infisical_secret": {
+          "name": "database_config",
+          "value": "{\"username\": \"db_user\", \"password\": \"db_pass\", \"host\": \"db.example.com\"}"
+        },
+        "node_config": {
+          "serviceName": "database_config",
+          "secretPath": "/"
+        },
+        "process": "Direct retrieval of single secret, automatic JSON parsing",
+        "benefits": [
+          "Single API call instead of multiple",
+          "Faster response time",
+          "Reduced network traffic",
+          "Simpler configuration",
+          "Better error messages"
+        ]
+      }
+    }
+  ],
+  "credential_examples": {
+    "v1_0_3_credentials": {
+      "name": "Infisical Production v1.0.3",
+      "type": "infisicalApi",
+      "data": {
+        "siteUrl": "https://infisical.ces.abssrv.it",
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "projectId": "83d483a7-5187-43cb-a52b-1d930285bd4e",
+        "environmentSlug": "dev"
+      }
+    },
+    "legacy_v1_0_2_credentials": {
+      "name": "Infisical Production v1.0.2 (Legacy)",
+      "type": "infisicalApi", 
+      "data": {
+        "host": "https://infisical.ces.abssrv.it",
+        "serviceToken": "st.12345678-1234-1234-1234-123456789012.abcdefghijklmnopqrstuvwxyz123456",
+        "projectSlug": "my-project",
+        "environmentSlug": "dev",
+        "cacheTtl": 300
+      }
+    }
+  },
+  "testing_examples": {
+    "environment_variables": {
+      "INFISICAL_SITE_URL": "https://infisical.ces.abssrv.it",
+      "INFISICAL_ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "INFISICAL_PROJECT_ID": "83d483a7-5187-43cb-a52b-1d930285bd4e",
+      "INFISICAL_ENVIRONMENT": "dev",
+      "INFISICAL_SECRET_NAME": "c4c_emea_qa_account",
+      "INFISICAL_SECRET_NAME_2": "my-super-super-secret"
+    },
+    "test_script_usage": {
+      "file": "test-sdk.js",
+      "purpose": "Test direct secret retrieval with environment variables",
+      "command": "node test-sdk.js",
+      "output_example": {
+        "secret_1": {
+          "name": "c4c_emea_qa_account",
+          "parsed_json": {
+            "username": "C4C_CARONTE",
+            "password": "Abstract2025!"
+          }
+        },
+        "secret_2": {
+          "name": "my-super-super-secret", 
+          "raw_value": "twingolacoso"
+        }
+      }
+    }
+  }
+}

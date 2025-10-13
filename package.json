@@ -1,0 +1,64 @@
+{
+  "name": "n8n-nodes-infisical",
+  "version": "1.0.4",
+  "description": "n8n node for Infisical secrets management",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "infisical",
+    "secrets",
+    "credentials"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ekulos/n8n-nodes-infisical",
+  "author": {
+    "name": "Ekulos",
+    "email": "ekulos@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ekulos/n8n-nodes-infisical.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/InfisicalApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/InfisicalNode/InfisicalNode.node.js"
+    ]
+  },
+  "dependencies": {
+    "@infisical/sdk": "^4.0.6",
+    "crypto-js": "^4.1.1",
+    "node-fetch": "^2.6.7",
+    "web-streams-polyfill": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.130",
+    "@types/node-fetch": "^2.6.13",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "dotenv": "^17.2.3",
+    "eslint-plugin-n8n-nodes-base": "^1.11.0",
+    "gulp": "^4.0.2",
+    "n8n-workflow": "*",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
