@@ -736,7 +736,11 @@ TEAMS_WEBHOOK_URL = "https://company.webhook.office.com/webhookb2/xxx"
 }
 ```
 
+<<<<<<< HEAD
 ## Tips and Best Practices
+=======
+## 💡 Tips and Best Practices
+>>>>>>> ce9d756 (release 1.0.4)
 
 ### 1. Naming Conventions
 ```bash
