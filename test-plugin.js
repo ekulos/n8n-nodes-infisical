@@ -102,7 +102,7 @@ async function testPluginLogic() {
       
       for (const variation of variations) {
         try {
-          console.log(`  🔍 Trying variation: "${variation}"`);
+          console.log(`  Trying variation: "${variation}"`);
           const secretData = await infisical.secrets().getSecret({
             environment: INFISICAL_ENVIRONMENT,
             projectId: INFISICAL_PROJECT_ID,

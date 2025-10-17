@@ -79,18 +79,18 @@ async function testApiParams() {
           const specificSecret = await secretsClient.getSecret(secretParams2);
           console.log(`Success getting specific secret "${INFISICAL_SECRET_NAME}":`, specificSecret.secretValue);
         } catch (error2) {
-          console.log('X Error with secretKey too:', error2.message);
+          console.log('Error with secretKey too:', error2.message);
         }
       }
 
     } catch (error) {
-      console.log('X Error with correct workspace ID:', error.message);
+      console.log('Error with correct workspace ID:', error.message);
     }
 
      
   } catch (error) {
-    console.error('X Setup error:', error.message);
-    console.error('X Stack trace:', error.stack);
+    console.error('Setup error:', error.message);
+    console.error('Stack trace:', error.stack);
   }
 }
 
