@@ -9,16 +9,6 @@
     "secrets",
     "credentials"
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/ekulos/n8n-nodes-infisical",
-  "author": {
-    "name": "Ekulos",
-    "email": "ekulos@example.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ekulos/n8n-nodes-infisical.git"
-  },
   "main": "index.js",
   "scripts": {
     "build": "tsc && gulp build:icons",
