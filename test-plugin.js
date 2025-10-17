@@ -11,14 +11,14 @@ async function testPluginLogic() {
     const INFISICAL_ENVIRONMENT = process.env.INFISICAL_ENVIRONMENT || 'dev';
 
     if (!INFISICAL_ACCESS_TOKEN || !INFISICAL_PROJECT_ID) {
-      console.error('❌ Missing required environment variables');
+      console.error('X Missing required environment variables');
       process.exit(1);
     }
 
-    console.log('🔧 Testing plugin logic...');
-    console.log(`📍 Site URL: ${INFISICAL_SITE_URL}`);
-    console.log(`🏗️ Project ID: ${INFISICAL_PROJECT_ID}`);
-    console.log(`🌍 Environment: ${INFISICAL_ENVIRONMENT}`);
+    console.log('Testing plugin logic...');
+    console.log(`Site URL: ${INFISICAL_SITE_URL}`);
+    console.log(`Project ID: ${INFISICAL_PROJECT_ID}`);
+    console.log(`Environment: ${INFISICAL_ENVIRONMENT}`);
     
     const client = new InfisicalSDK({
       siteUrl: INFISICAL_SITE_URL
@@ -33,7 +33,7 @@ async function testPluginLogic() {
     const serviceName = 'c4c_emea_qa_account';
     const secretPath = '/';
     
-    console.log(`\n🔍 Testing direct retrieval for service: "${serviceName}"`);
+    console.log(`\nTesting direct retrieval for service: "${serviceName}"`);
     
     try {
       const secretData = await infisical.secrets().getSecret({
@@ -43,7 +43,7 @@ async function testPluginLogic() {
         secretName: serviceName,
       });
       
-      console.log('✅ Found secret data:', {
+      console.log('Found secret data:', {
         secretKey: secretData.secretKey,
         secretValue: secretData.secretValue.substring(0, 50) + '...',
         fullLength: secretData.secretValue.length
@@ -67,32 +67,32 @@ async function testPluginLogic() {
             jsonValue = jsonValue.replace('{username"', '{"username"');
           }
           
-          console.log('🔧 Attempting to parse JSON:', jsonValue);
+          console.log('Attempting to parse JSON:', jsonValue);
           
           const parsedValue = JSON.parse(jsonValue);
           if (typeof parsedValue === 'object' && parsedValue !== null) {
             // If it's a JSON object, use its properties directly
             Object.assign(output, parsedValue);
-            console.log('✅ Parsed as JSON object');
+            console.log('Parsed as JSON object');
           } else {
             // If it's a simple JSON value, use the secret key
             output[secret.secretKey] = parsedValue;
-            console.log('✅ Parsed as simple JSON value');
+            console.log('Parsed as simple JSON value');
           }
         } catch (parseError) {
           // Not JSON or malformed JSON, use as-is
           output[secret.secretKey] = secret.secretValue;
-          console.log('⚠️ Could not parse as JSON, using raw value:', parseError.message);
+          console.log('Could not parse as JSON, using raw value:', parseError.message);
         }
       }
       
-      console.log('📤 Plugin output:', output);
+      console.log('Plugin output:', output);
       
     } catch (error) {
-      console.log('❌ Error retrieving secret:', error.message);
+      console.log('X Error retrieving secret:', error.message);
       
       // Test variations
-      console.log('\n🔍 Testing variations...');
+      console.log('\nTesting variations...');
       const variations = [
         serviceName.toLowerCase(),
         serviceName.toUpperCase(),
@@ -109,16 +109,16 @@ async function testPluginLogic() {
             secretPath: secretPath,
             secretName: variation,
           });
-          console.log(`  ✅ Found with variation: "${variation}"`);
+          console.log(`  Found with variation: "${variation}"`);
           break;
         } catch {
-          console.log(`  ❌ Not found: "${variation}"`);
+          console.log(`  X Not found: "${variation}"`);
         }
       }
     }
     
     // Test with simple secret
-    console.log('\n🔍 Testing simple secret: "my-super-super-secret"');
+    console.log('\nTesting simple secret: "my-super-super-secret"');
     try {
       const secretData = await infisical.secrets().getSecret({
         environment: INFISICAL_ENVIRONMENT,
@@ -127,7 +127,7 @@ async function testPluginLogic() {
         secretName: 'my-super-super-secret',
       });
       
-      console.log('✅ Found simple secret:', {
+      console.log('Found simple secret:', {
         secretKey: secretData.secretKey,
         secretValue: secretData.secretValue
       });
@@ -135,14 +135,14 @@ async function testPluginLogic() {
       // Process simple secret
       const output = {};
       output[secretData.secretKey] = secretData.secretValue;
-      console.log('📤 Simple secret output:', output);
+      console.log('Simple secret output:', output);
       
     } catch (error) {
-      console.log('❌ Error retrieving simple secret:', error.message);
+      console.log('X Error retrieving simple secret:', error.message);
     }
      
   } catch (error) {
-    console.error('❌ Setup error:', error.message);
+    console.error('X Setup error:', error.message);
   }
 }
 

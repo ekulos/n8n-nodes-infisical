@@ -2,7 +2,7 @@
 
 This guide contains practical examples and real-world use cases for the Infisical node in n8n.
 
-## 📚 Examples Index
+## Examples Index
 
 1. [PostgreSQL Database](#1-postgresql-database)
 2. [REST API with Authentication](#2-rest-api-with-authentication)
@@ -736,7 +736,7 @@ TEAMS_WEBHOOK_URL = "https://company.webhook.office.com/webhookb2/xxx"
 }
 ```
 
-## 💡 Tips and Best Practices
+## Tips and Best Practices
 
 ### 1. Naming Conventions
 ```bash
