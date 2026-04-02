@@ -7,24 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.3] - 2025-10-13
 
-### 🚀 Major Performance Improvements
+### Major Performance Improvements
 - **BREAKING CHANGE**: Switched from `listSecrets()` with filtering to direct `getSecret()` retrieval
 - **Performance**: Dramatically reduced API calls and improved response times
 - **Efficiency**: Single API call per secret instead of downloading all secrets
 
-### 🔧 Authentication Updates
+### Authentication Updates
 - **BREAKING CHANGE**: Updated to use Access Token (Bearer) authentication instead of Service Token
 - **BREAKING CHANGE**: Now requires Project ID (UUID) instead of Project Slug
 - **SDK Upgrade**: Updated to Infisical SDK v4.0.6+ for better compatibility
 - **Security**: Enhanced authentication method with Bearer token support
 
-### 📦 Smart JSON Handling
+### Smart JSON Handling
 - **Auto-parsing**: Automatically detects and parses JSON secret values
 - **Error Correction**: Intelligently fixes common JSON formatting errors (e.g., `{username"` → `{"username"`)
 - **Structured Output**: JSON objects are flattened into direct output fields
 - **Fallback**: Non-JSON values are returned as raw strings
 
-### 🎯 Intelligent Fallback System
+### Intelligent Fallback System
 - **Smart Matching**: If exact service name isn't found, automatically tries variations:
   - Lowercase version (`servicename`)
   - Uppercase version (`SERVICENAME`)
@@ -32,13 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Auto-discovery**: Reduces configuration needed for standard naming patterns
 - **Error Reduction**: Fewer "secret not found" errors due to naming mismatches
 
-### 🛠️ Developer Experience
+### Developer Experience
 - **Better Error Messages**: More descriptive error messages with specific secret names
 - **Environment Variables**: Enhanced test suite with configurable secret names
 - **Type Safety**: Improved TypeScript definitions and error handling
 - **Documentation**: Comprehensive examples and migration guide
 
-### 🔄 Migration Guide from v1.0.2
+### Migration Guide from v1.0.2
 1. **Update Credentials**:
    - Replace Service Token with Access Token
    - Replace Project Slug with Project ID (UUID format)
@@ -51,20 +51,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.2] - 2025-10-08
 
-### 🔐 Authentication & Compatibility Fixes
+### Authentication & Compatibility Fixes
 - **Fixed**: Authentication issues with Infisical SDK v4
 - **Improved**: Bearer token authentication implementation
 - **Enhanced**: Project ID support for better workspace identification
 - **Updated**: Environment variable configuration for testing
 - **Resolved**: Plugin visibility issues in n8n interface
 
-### 🐛 Bug Fixes
+### Bug Fixes
 - Fixed "blob is not defined" errors with polyfill additions
 - Resolved authentication token validation issues
 - Corrected project identification problems
 - Fixed compilation errors with TypeScript configuration
 
-### 📚 Documentation
+### Documentation
 - Updated installation instructions for Docker environments
 - Added troubleshooting section for common issues
 - Improved credential configuration examples
@@ -72,14 +72,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2025-09-15
 
-### 🎯 Initial Stable Release
+### Initial Stable Release
 - **Complete**: First fully functional public release
 - **Docker**: Complete Docker integration with caronte-workflow
 - **Publishing**: Successfully published to npm registry
 - **Testing**: Comprehensive test suite with real Infisical instance
 - **Documentation**: Complete setup and usage documentation
 
-### 🏗️ Infrastructure
+### Infrastructure
 - Docker Compose integration for development
 - npm package publishing workflow
 - Environment-based configuration
