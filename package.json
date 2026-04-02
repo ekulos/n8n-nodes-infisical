@@ -49,5 +49,13 @@
   },
   "peerDependencies": {
     "n8n-workflow": "*"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekulos/n8n-nodes-infisical.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ekulos/n8n-nodes-infisical/issues"
+  },
+  "homepage": "https://github.com/ekulos/n8n-nodes-infisical#readme"
 }
